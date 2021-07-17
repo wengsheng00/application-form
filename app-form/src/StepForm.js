@@ -1,38 +1,40 @@
 import React, {useState} from "react";
-import { Formik, FormikConfig, FormikValues} from "formik";
+import { Form, Formik } from "formik";
+import NavButton from "./components/NavButton";
 
-const StepForm = ({children, initialValues, onSubmit }) => {
+const StepForm = ({children, initialValues, onSubmit, validationSchema }) => {
     const [stepNumber, setStepNumber] = useState(0);
     const [snapshot, setSnapshot] = useState(initialValues);
 
     const steps = React.Children.toArray(children);
     const step = steps[stepNumber];
-    const totalSteps = step.length;
-    const isLastStep = totalSteps - 1 === stepNumber;
+    const totalSteps = steps.length;
+    const isLastStep = (totalSteps - 1 === stepNumber);
 
     const nextStep = (values) => {
-        setSnapshot(values)
+        setSnapshot(values);
         setStepNumber(stepNumber + 1);
     }
 
     const previousStep = (values) => {
-        setSnapshot(values)
+        setSnapshot(values);
         setStepNumber(stepNumber - 1);
     }
 
-    const handleSubmit = (values, actions) => {
-        {step.props.onSubmit ? 
-            await step.props.onSubmit(values) : 
-            null
+    const handleSubmit = async (values, actions) => {
+        // Current step with its own onSubmit
+        if (step.props.onSubmit){
+            await step.props.onSubmit(values)
         }
-
-       if (isLastStep){
+        // Last Step of the form (top-level onSubmit)
+        if (isLastStep){
            return onSubmit(values, actions)
-       }
-       else{
+        }
+        else{
+            // Reset the touched objects 
             actions.setTouched({});
             nextStep(values);
-       }
+        }
     }
 
     return (
@@ -41,14 +43,25 @@ const StepForm = ({children, initialValues, onSubmit }) => {
                 initialValues={{
                     snapshot
                 }} 
-                onSubmit={handleSubmit} 
-                validationSchema={step.props.validationSchema}>
+                onSubmit={handleSubmit}
+                validationSchema={validationSchema}>
             {(formik) => (
-                <form onSubmit={formik.handleSubmit}></form>)}
+                <Form>
+
+                    {step}
+
+                    <NavButton 
+                        hasPrevious={stepNumber > 0}
+                        isLastStep={isLastStep}
+                        onBackClick={() => previousStep(formik.values)}
+                    >
+                    </NavButton>
+                </Form>)}
             </Formik>
         </div>
     )
 
 }
+export default StepForm;
 
-const Step = ({stepName = '', children}) => children
+export const Step = ({stepName = '', children}) => children
