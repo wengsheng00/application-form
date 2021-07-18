@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import { Form, Formik } from "formik";
 import NavButton from "./components/NavButton";
 
-const StepForm = ({children, initialValues, onSubmit, validationSchema }) => {
+const StepForm = ({children, initialValues, onSubmit }) => {
     const [stepNumber, setStepNumber] = useState(0);
     const [snapshot, setSnapshot] = useState(initialValues);
 
@@ -28,7 +28,7 @@ const StepForm = ({children, initialValues, onSubmit, validationSchema }) => {
         }
         // Last Step of the form (top-level onSubmit)
         if (isLastStep){
-           return onSubmit(values, actions)
+            return onSubmit(values, actions)
         }
         else{
             // Reset the touched objects 
@@ -44,7 +44,7 @@ const StepForm = ({children, initialValues, onSubmit, validationSchema }) => {
                     snapshot
                 }} 
                 onSubmit={handleSubmit}
-                validationSchema={validationSchema}>
+                validationSchema={step.props.validationSchema}>
             {(formik) => (
                 <Form>
 

@@ -3,11 +3,14 @@ import React from 'react';
 
 const NavButton = (props) => {
     return (
-        <div style = {{
+        <div 
+        style = {{
             display: 'flex',
             marginTop: 30,
-            justifyContent: 'space-between'
-        }}>
+            justifyContent: 'space-around',
+        }}
+
+        >
             {props.hasPrevious && (
                 <Button variant='outlined' onClick={props.onBackClick}>
                     Back
