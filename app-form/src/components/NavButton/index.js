@@ -1,5 +1,6 @@
 import { Button } from '@material-ui/core';
 import React from 'react';
+import {Formik} from "formik"
 
 const NavButton = (props) => {
     return (
@@ -11,6 +12,8 @@ const NavButton = (props) => {
         }}
 
         >
+            <Button variant = 'outlined' type='reset' onClick={() => props.resetForm()} >Reset</Button>
+            
             {props.hasPrevious && (
                 <Button variant='outlined' onClick={props.onBackClick}>
                     Back

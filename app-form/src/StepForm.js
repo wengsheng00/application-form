@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import { Form, Formik } from "formik";
 import NavButton from "./components/NavButton";
+import { Button } from "@material-ui/core";
 
 const StepForm = ({children, initialValues, onSubmit}) => {
     const [stepNumber, setStepNumber] = useState(0);
@@ -35,19 +36,22 @@ const StepForm = ({children, initialValues, onSubmit}) => {
         }
         else{
             // Reset the touched objects 
-            // actions.setTouched({});
+            actions.setTouched({});
             nextStep(values);
         }
     }
 
     return (
+        
         <div>
             <Formik 
                 initialValues={{
                     snapshot
                 }} 
                 onSubmit={handleSubmit}
-                validationSchema={step.props.validationSchema}>
+                validationSchema={step.props.validationSchema}
+  
+            >
             {(formik) => (
                 <Form>
 
@@ -56,9 +60,11 @@ const StepForm = ({children, initialValues, onSubmit}) => {
                     <NavButton 
                         hasPrevious={stepNumber > 0}
                         isLastStep={isLastStep}
-                        onBackClick={() => previousStep(formik.values)}
-                    >
+                        onBackClick={() => previousStep(formik.values)}>
                     </NavButton>
+
+                    <Button onClick={() => snapshot.setFieldValue('fullName', ' ')}> RESET </Button>
+
                 </Form>)}
             </Formik>
         </div>
