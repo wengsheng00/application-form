@@ -23,19 +23,15 @@ const StepForm = ({children, initialValues, onSubmit}) => {
     }
 
     const handleSubmit = async (values, actions) => {
-        // Current step with its own onSubmit
         if (step.props.onSubmit){
-            console.log(stepNumber);
             await step.props.onSubmit(values)
-            
         }
-        // Last Step of the form (top-level onSubmit)
+
         if (isLastStep){
             await step.props.onSubmit(values)
             return onSubmit(values, actions)
         }
         else{
-            // Reset the touched objects 
             actions.setTouched({});
             nextStep(values);
         }
@@ -50,22 +46,22 @@ const StepForm = ({children, initialValues, onSubmit}) => {
                 }} 
                 onSubmit={handleSubmit}
                 validationSchema={step.props.validationSchema}
-  
             >
-            {(formik) => (
-                <Form>
+                
+                {(formik) => (
+                    <Form>
+                        {step}
+                        <div className="grid">
+                        <NavButton 
+                            hasPrevious={stepNumber > 0}
+                            isLastStep={isLastStep}
+                            onBackClick={() => previousStep(formik.values)}
+                        >
+                        </NavButton>
 
-                    {step}
-
-                    <NavButton 
-                        hasPrevious={stepNumber > 0}
-                        isLastStep={isLastStep}
-                        onBackClick={() => previousStep(formik.values)}>
-                    </NavButton>
-
-                    <Button onClick={() => snapshot.setFieldValue('fullName', ' ')}> RESET </Button>
-
-                </Form>)}
+                        <Button variant = 'outlined' type="reset">Reset</Button>
+                        </div>
+                    </Form>)}
             </Formik>
         </div>
     )
